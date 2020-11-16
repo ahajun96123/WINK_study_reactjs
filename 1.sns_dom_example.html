@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <title>sns exercise</title>
+    <style>
+        h1{
+            margin-top: 0px;
+        }
+        textarea{
+            border: solid black 3px;
+        }
+        .container{
+            background-color: #abc;
+            padding: 15px;
+            margin-top: 9px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <textarea name="text" id="text" cols="30" rows="10"></textarea>
+        <button onclick="post('lee', text.value, true)">작성</button>
+    </div>
+    <div id="timeline">
+        <!--<div class="container">
+            <h1>작성자</h1>
+            <p>내용</p>
+        </div>-->
+    </div>
+
+    <script>
+        window.onload = async ()=>{
+            const feedResponse = await fetch('http://ec2-52-78-131-251.ap-northeast-2.compute.amazonaws.com/feed/', {
+                method: 'get',
+            });
+            const posts = await feedResponse.json();
+            console.log(posts);
+
+            for (let i = 0; i < posts.length; i++){
+                let writer = posts[i].owner;
+                let content = posts[i].content;
+                post(writer, content, false);
+            }
+        }
+        let textarea = document.querySelector("#text");
+        let timeline = document.querySelector("#timeline");
+        const validate = (description)=>{
+            if (description === "") alert("내용을 입력해주세요");
+        }
+        const post = (name, description, validation)=>{
+
+            if (validation) validate(description);
+
+            let container = document.createElement("div");
+            let writer = document.createElement("h1");
+            let contents = document.createElement("p");
+
+            writer.appendChild(document.createTextNode(name));
+            contents.appendChild(document.createTextNode(description));
+            container.appendChild(writer);
+            container.appendChild(contents);
+            container.setAttribute("class", "container");
+
+            timeline.appendChild(container);
+
+            console.log(container);
+        }
+    </script>
+</body>
+<script>
+    
+</script>
+</html>
