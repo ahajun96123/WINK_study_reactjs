@@ -3,28 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <title>sns exercise</title>
-    <style>
-        h1{
-            margin-top: 0px;
-        }
-        textarea{
-            border: solid black 3px;
-        }
-        .container{
-            background-color: #abc;
-            padding: 15px;
-            margin-top: 8px;
-        }
-    </style>
+    <link rel="stylesheet" href="sns_style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="item">
-            <input type="text" placeholder="작성자 이름" name="name" id="name">
-            <i class="fas fa-user"></i>
+    <!-- Trigger/Open The Modal -->
+    <button id="writeBtn">글 쓰기</button>
+    <button id="deleteBtn">글 삭제</button>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="container">
+                <div class="item">
+                    <input type="text" placeholder="✨작성자 이름" name="name" id="name">
+                    <i class="fas fa-user"></i>
+                </div>
+                <textarea name="text" id="text" cols="30" rows="10" placeholder="✍내용"></textarea>
+                <button onclick="postStart(name.value, text.value, true)" id="post">작성</button>
+            </div>
         </div>
-        <textarea name="text" id="text" cols="30" rows="10" placeholder="내용"></textarea>
-        <button onclick="postStart(name.value, text.value, true)">작성</button>
+    </div>
+    <!-- The Modal -->
+    <div id="deleteModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="container">
+                <div class="item">
+                    <input type="text" placeholder="게시물 id" name="name" id="postsId">
+                    <i class="fas fa-user"></i>
+                </div>
+                <button onclick="deleteStart(name.value, text.value, true)" id="delete">삭제</button>
+            </div>
+        </div>
     </div>
     <div id="timeline">
         <!--<div class="container">
@@ -34,60 +47,10 @@
     </div>
 
     <script>
-        window.onload = async ()=>{
-            const feedResponse = await fetch('http://ec2-52-78-131-251.ap-northeast-2.compute.amazonaws.com/feed/', {
-                method: 'get',
-            });
-            const posts = await feedResponse.json();
 
-            for (let i = 0; i < posts.length; i++){
-                let writer = posts[i].owner;
-                let content = posts[i].content;
-                await post(writer, content);
-            }
-        }
-        let timeline = document.querySelector("#timeline");
-        const validate = (description, name)=>{
-            if (description === "" || name === "") alert("작성자 또는 내용을 입력해주세요");
-        }
-        const postStart = (validation)=>{
-            let name = document.querySelector("#name").value;
-            let description = document.querySelector("#text").value;
-            console.log(name);
-            if (validation){
-                validate(description, name);
-            }else{
-                post(name, description);
-            }
-        }
-        const post = async(name, description)=>{
-            await fetch('http://ec2-52-78-131-251.ap-northeast-2.compute.amazonaws.com/feed/', {
-                method: 'POST',
-                body: JSON.stringify({
-                    owner: name,
-                    content: description,
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            })
-            .then(res => res.json())
-            .then(res => {
-                let container = document.createElement("div");
-                let writer = document.createElement("h1");
-                let contents = document.createElement("p");
-
-                writer.appendChild(document.createTextNode(name));
-                contents.appendChild(document.createTextNode(description));
-                container.appendChild(writer);
-                container.appendChild(contents);
-                container.setAttribute("class", "container");
-
-                timeline.appendChild(container);
-            })
-        }
     </script>
 </body>
+<script src="sns_script.js"></script>
 <script>
     
 </script>
